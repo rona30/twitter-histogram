@@ -25,18 +25,17 @@ $string = json_decode($twitter->setGetfield($getfield)
 
 if($string["errors"][0]["message"] != "") {echo "<h3>Sorry, there was a problem.</h3><p>Twitter returned the following error message:</p><p><em>".$string[errors][0]["message"]."</em></p>";exit();}
    
-//get and format the time (AM or PM)      
-foreach($string as $key => $row)
-{
-  $thetime[$key]  = date("g", strtotime($row['created_at']));
-  $thenotation[$key] = date("A", strtotime($row['created_at']));   
-}
+//get and format the time (AM or PM)
+$tweettime = array();       
+foreach($string as $items)
+{           
+  $tweettime[] = array(date("g", strtotime($items['created_at'])) => date("A", strtotime($items['created_at'])));    
+}  
 
-// Sort the data with notation ascending
-// Add $string as the last parameter, to sort by the common key
-array_multisort($thenotation, SORT_ASC, $thetime, SORT_ASC, $string);
+sort($tweettime);
 
-sort($string);
-$tweettime = implode(',',$string);
-echo($tweettime);
+  print_r($tweettime);
+    
+//$tweettime = implode(',',$tweettime);
+//echo($tweettime);
 ?>
