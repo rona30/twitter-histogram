@@ -1,52 +1,44 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  </head>
-  <body>
-    <!-- Plotly chart will be drawn inside this DIV -->
-    <div id="myDiv"></div>
+<?php
+/*
+GET statuses / user_timeline - Returns a collection of the most recent Tweets posted by the user indicated by the screen_name or user_id parameters.
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>                                      
-    <script>    
-    var getUrlParameter = function getUrlParameter(sParam) {
-        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-            sURLVariables = sPageURL.split('&'),
-            sParameterName,
-            i;
-    
-        for (i = 0; i < sURLVariables.length; i++) {
-            sParameterName = sURLVariables[i].split('=');
-    
-            if (sParameterName[0] === sParam) {
-                return sParameterName[1] === undefined ? true : sParameterName[1];
-            }
-        }
-    };
+Goal: Get the user's last 500 tweets to analyze his most active hours
+*/
+require_once('TwitterAPIExchange.php');
+// Set access tokens
+$settings = array(
+'oauth_access_token' => "918975920962072577-VjEe76BkTnVW6uPsedbSDP0DGrmV1So",
+'oauth_access_token_secret' => "5yvAbnctdtMYUy7pz20FutUoZGGiPBJpZXMoQLpaBYQR6",
+'consumer_key' => "7NL3foKJ5FMzQDGq2Nqe54aFE",
+'consumer_secret' => "1cllXAkGF6y4z8cP8KStDQybFQmbXwPMyzf9x8ufHVmp0CDWhE"
+);
+$url = "https://api.twitter.com/1.1/statuses/user_timeline.json";
+$requestMethod = "GET";  
 
-    var user = getUrlParameter('user');      
-    var count = getUrlParameter('count');       
-    
-    $.ajax({
-      method: "GET",
-      url: "tweet_data.php",
-      data: { user: user, count: count }
-    })
-      .done(function( tweettime ) {    alert(tweettime);
-      tweettime = tweettime.split(','); 
-      var trace = {
-          x: tweettime,
-          type: 'histogram',
-        };
-      var data = [trace];
-      var layout = {
-      bargap: 0,
-      title: "Twitter Histogram", 
-      xaxis: {title: "Time"}, 
-      yaxis: {title: "Number of Tweets"}
-      };
-      Plotly.newPlot('myDiv', data, layout);   
-      });       
-    </script>  
-  </body>
-<html>
+if (isset($_GET['user']))  {$user = $_GET['user'];}  else {$user  = "imronajss";}
+if (isset($_GET['count'])) {$count = $_GET['count'];} else {$count = 500;}
+$getfield = "?screen_name=$user&count=$count";
+$twitter = new TwitterAPIExchange($settings);
+$string = json_decode($twitter->setGetfield($getfield)
+->buildOauth($url, $requestMethod)
+->performRequest(),$assoc = TRUE);
+
+if($string["errors"][0]["message"] != "") {echo "<h3>Sorry, there was a problem.</h3><p>Twitter returned the following error message:</p><p><em>".$string[errors][0]["message"]."</em></p>";exit();}
+   
+//get and format the time (AM or PM)
+$tweettime = array();       
+foreach($string as $key => $row)
+{
+  $thetime[$key]  = date("g", strtotime($row['created_at']));
+  $thenotation[$key] = date("A", strtotime($row['created_at']));   
+}
+
+// Sort the data with notation ascending
+// Add $data as the last parameter, to sort by the common key
+array_multisort($thenotation, SORT_ASC, $thetime, SORT_ASC, $string);
+
+sort($string);
+
+$tweettime = implode(',',$tweettime);
+echo($tweettime);
+?>
