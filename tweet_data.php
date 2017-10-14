@@ -1,4 +1,9 @@
 <?php
+/*
+GET statuses / user_timeline - Returns a collection of the most recent Tweets posted by the user indicated by the screen_name or user_id parameters.
+
+Goal: Get the user's last 500 tweets to analyze his most active hours
+*/
 require_once('TwitterAPIExchange.php');
 // Set access tokens
 $settings = array(
@@ -8,7 +13,8 @@ $settings = array(
 'consumer_secret' => "1cllXAkGF6y4z8cP8KStDQybFQmbXwPMyzf9x8ufHVmp0CDWhE"
 );
 $url = "https://api.twitter.com/1.1/statuses/user_timeline.json";
-$requestMethod = "GET";
+$requestMethod = "GET";  
+
 if (isset($_GET['user']))  {$user = $_GET['user'];}  else {$user  = "imronajss";}
 if (isset($_GET['count'])) {$count = $_GET['count'];} else {$count = 500;}
 $getfield = "?screen_name=$user&count=$count";
@@ -16,8 +22,16 @@ $twitter = new TwitterAPIExchange($settings);
 $string = json_decode($twitter->setGetfield($getfield)
 ->buildOauth($url, $requestMethod)
 ->performRequest(),$assoc = TRUE);
+
 if($string["errors"][0]["message"] != "") {echo "<h3>Sorry, there was a problem.</h3><p>Twitter returned the following error message:</p><p><em>".$string[errors][0]["message"]."</em></p>";exit();}
-echo "<pre>";
-print_r($string);
-echo "</pre>";
+
+//get and format the time (AM or PM)
+$tweettime = array();       
+foreach($string as $items)
+{
+  $tweettime[] = date("g A", strtotime($items['created_at']));
+}
+sort($tweettime);
+$tweettime = implode(',',$tweettime);
+echo($tweettime);
 ?>
