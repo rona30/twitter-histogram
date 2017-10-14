@@ -32,7 +32,7 @@
       url: "tweet_data.php",
       data: { user: user, count: count }
     })
-      .done(function( tweettime ) {
+      .done(function( tweettime ) {    alert(tweettime);
       tweettime = tweettime.split(','); 
       var trace = {
           x: tweettime,
