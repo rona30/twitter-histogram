@@ -2,14 +2,14 @@
 require_once('TwitterAPIExchange.php');
 // Set access tokens
 $settings = array(
-'oauth_access_token' => "YOUR_OAUTH_ACCESS_TOKEN",
-'oauth_access_token_secret' => "YOUR_OAUTH_ACCESS_TOKEN_SECRET",
+'oauth_access_token' => "	918975920962072577-VjEe76BkTnVW6uPsedbSDP0DGrmV1So",
+'oauth_access_token_secret' => "5yvAbnctdtMYUy7pz20FutUoZGGiPBJpZXMoQLpaBYQR6",
 'consumer_key' => "YOUR_CONSUMER_KEY",
 'consumer_secret' => "YOUR_CONSUMER_SECRET"
 );
-$url = "https://github.com/rona30/twitter-histogram/user_timeline.json";
+$url = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 $requestMethod = "GET";
-$getfield = '?screen_name=imrona&count=50';
+$getfield = '?screen_name=imronajss&count=50';
 $twitter = new TwitterAPIExchange($settings);
 $string = json_decode($twitter->setGetfield($getfield)
 ->buildOauth($url, $requestMethod)
