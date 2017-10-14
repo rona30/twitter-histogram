@@ -27,14 +27,17 @@ if($string["errors"][0]["message"] != "") {echo "<h3>Sorry, there was a problem.
    
 //get and format the time (AM or PM)
 $tweettime = array();       
-foreach($string as $items)
+foreach($string as $key => $row)
 {
-  $tweettime[] = date("g A", strtotime($items['created_at']));    
+  $thetime[$key]  = date("g", strtotime($row['created_at']));
+  $thenotation[$key] = date("A", strtotime($items['created_at']));   
 }
 
-usort($tweettime, function($a, $b) {
-   return (strtotime($a) > strtotime($b));
-});
+// Sort the data with notation ascending
+// Add $data as the last parameter, to sort by the common key
+array_multisort($thenotation, SORT_ASC, $thetime, SORT_ASC, $string);
+
+sort($string);
 
 $tweettime = implode(',',$tweettime);
 echo($tweettime);
