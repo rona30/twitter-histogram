@@ -24,14 +24,18 @@ $string = json_decode($twitter->setGetfield($getfield)
 ->performRequest(),$assoc = TRUE);
 
 if($string["errors"][0]["message"] != "") {echo "<h3>Sorry, there was a problem.</h3><p>Twitter returned the following error message:</p><p><em>".$string[errors][0]["message"]."</em></p>";exit();}
-
+   
 //get and format the time (AM or PM)
 $tweettime = array();       
 foreach($string as $items)
 {
-  $tweettime[] = date("g A", strtotime($items['created_at']));
+  $tweettime[] = date("g A", strtotime($items['created_at']));    
 }
-sort($tweettime);
+
+usort($tweettime, function($a, $b) {
+   return (strtotime($a) > strtotime($b));
+});
+
 $tweettime = implode(',',$tweettime);
 echo($tweettime);
 ?>
