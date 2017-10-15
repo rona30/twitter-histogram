@@ -7,10 +7,10 @@ Goal: Get the user's last 500 tweets to analyze his most active hours
 require_once('TwitterAPIExchange.php');
 // Set access tokens
 $settings = array(
-'oauth_access_token' => "918975920962072577-VjEe76BkTnVW6uPsedbSDP0DGrmV1So",
-'oauth_access_token_secret' => "5yvAbnctdtMYUy7pz20FutUoZGGiPBJpZXMoQLpaBYQR6",
-'consumer_key' => "7NL3foKJ5FMzQDGq2Nqe54aFE",
-'consumer_secret' => "1cllXAkGF6y4z8cP8KStDQybFQmbXwPMyzf9x8ufHVmp0CDWhE"
+'oauth_access_token' => "ACCESS_TOKEN",
+'oauth_access_token_secret' => "ACCESS_TOKEN_SECRET",
+'consumer_key' => "CONSUMER_KEY",
+'consumer_secret' => "CONSUMER_SECRET"
 );
 $url = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 $requestMethod = "GET";  
