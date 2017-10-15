@@ -1,7 +1,5 @@
 # twitter-histogram
  Histogram of a user's tweets
 - will respond to /histogram.html?user=username&count=n where username = screen_name and n = number of tweets
-- default values:
-  user = imronajss
-  count = 500
+- default values are specified
 
